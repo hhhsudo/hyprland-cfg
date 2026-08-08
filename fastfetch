@@ -1,0 +1,108 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "/home/hhh/Downloads/fastfetch/Text File.txt"
+  },
+   "modules": [
+  {
+   "type": "break"
+  },  
+  {
+   "type": "break"
+  },
+  {
+    "type": "title",
+    "format": " SYSTEM"
+  },
+  {
+   "type": "break"
+  },
+  {
+   "type": "os",
+   "key": " OS"
+  }, 
+  {
+    "type": "initsystem",
+    "key": " Kernel"
+  },
+  {
+    "type": "wm",
+    "key": " WM"
+  },
+  {
+    "type": "uptime",
+    "key": "󰅐 Uptime"
+  },
+  {
+    "type": "break"
+  },
+
+  {
+    "type": "title",
+    "format": "󰍛 HARDWARE"
+  },
+  { 
+    "type": "break"
+  },
+  {
+    "type": "cpu",
+    "key": "󰻠 CPU"
+  },
+  {
+    "type": "gpu",
+    "key": "󰢮 GPU"
+  },
+  {
+    "type": "memory",
+    "key": " RAM"
+  },
+
+  {
+    "type": "break"
+  },
+
+  {
+    "type": "title",
+    "format": "󰣇 SOFTWARE"
+  },
+  {
+    "type": "break"
+  },
+  {
+    "type": "shell",
+    "key": " Shell"
+  },
+  {
+    "type": "terminal",
+    "key": " Terminal"
+  },
+  {
+    "type": "packages",
+    "key": "󰏖 Packages"
+  },
+  {
+    "type": "break"
+  },
+
+  {
+    "type": "title",
+    "format": "󰈙 MISC"
+  },
+  {
+    "type": "break"
+  },
+  {
+    "type": "weather",
+    "key":  "󰖙 Weather"
+  },
+  {
+    "type": "player",
+    "key":  "󰝚 Player"
+  },
+  {
+    "type": "media",
+    "key": "󰐊 Song"  
+  }
+]
+}
