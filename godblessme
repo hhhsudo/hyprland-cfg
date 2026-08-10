@@ -23,7 +23,7 @@
 hl.monitor({
     output   = "DP-3",
     mode     = "2560x1440@180",
-position = "1920x0",
+position = "1920x-310",
     scale    = "1",
 })
 hl.monitor({
@@ -40,7 +40,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "thunar"
 local menu        = "hyprlauncher"
 
 
@@ -55,7 +55,7 @@ local menu        = "hyprlauncher"
 --
      hl.on("hyprland.start", function ()      
 --   hl.exec_cmd("nm-applet")
-     hl.exec_cmd("waybar &")
+     hl.exec_cmd("quickshell -c pill &")
      hl.exec_cmd("hyprpaper &")
      hl.exec_cmd("kitty --class cava -e cava &")
      hl.dispatch(hl.dsp.layout("preselect d"))     
@@ -63,6 +63,7 @@ local menu        = "hyprlauncher"
      hl.exec_cmd("sleep 0.5 && kitty")
      hl.exec_cmd("vesktop &")
      hl.exec_cmd("firefox &")
+     hl.exec_cmd("matugen &")
      hl.exec_cmd("flatpak run org.telegram.desktop")
 end)
 
@@ -273,14 +274,14 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
-local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(terminal))
+local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 -- closeWindowBind:set_enabled(false)
 
-hl.bind(mainMod .. " + 0", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + KP_enter", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
-hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + B", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 --hl.bind(mainMod .. " + 0", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + P", hl.dsp.layout("togglesplit"))    -- dwindle only
@@ -288,15 +289,15 @@ hl.bind("SHIFT + Space", hl.dsp.exec_cmd("rofi -show drun"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 
 -- Move focus with mainMod + arrow keys
-hl.bind("SHIFT + KP_left",  hl.dsp.focus({ direction = "left" }))
-hl.bind("SHIFT + KP_right",  hl.dsp.focus({ direction = "right" }))
-hl.bind("SHIFT + KP_up",  hl.dsp.focus({ direction = "up" }))
-hl.bind("SHIFT + KP_down",  hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + H",  hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + L",  hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + K",  hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + J",  hl.dsp.focus({ direction = "down" }))
 
 -- Switch workspaces with mainMod + H/J/K/L/;/Y/U/I/O/P
 -- Move active window to a workspace with mainMod + SHIFT + H/J/K/L/;/Y/U/I/O/P
 
-local keys = { "h", "j", "k", "l", "b", "n", "m", "", "", "" }
+local keys = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
 for i = 1, 10 do
     local key = keys[i]
@@ -306,37 +307,43 @@ end
 
 -- Example special workspace (scratchpad)
 --hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
---hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind("SUPER + F", function()
+    hl.dispatch(hl.dsp.window.fullscreen({
+        mode = "fullscreen",
+        action = "toggle",
+    }))
+end)
 
 -- Scroll through existing workspaces with mainMod + scroll
-hl.bind("ALT + TAB", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind("ALT + W",   hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + TAB", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + W",   hl.dsp.focus({ workspace = "e-1" }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
+hl.bind(mainMod .. " + KP_prior", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 6%+"), { locked = true, repeating = true })
+hl.bind(mainMod .. " + KP_home", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 6%-"),      { locked = true, repeating = true })
+hl.bind(mainMod .. " + KP_up", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })
 hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),   { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessUp",  hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"),                  { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown",hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"),                  { locked = true, repeating = true })
 
 -- Requires playerctl
 hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("playerctl next"),       { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind(mainMod .. " + Z",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
 hl.bind("SUPER + A", hl.dsp.exec_cmd("firefox"))
 
 -- Window movement
-hl.bind("ALT + KP_left", hl.dsp.window.move({ direction = "left" }))
-hl.bind("ALT + KP_right", hl.dsp.window.move({ direction = "right" }))
-hl.bind("ALT + KP_up",  hl.dsp.window.move({ direction = "up" }))
-hl.bind("ALT + KP_down",  hl.dsp.window.move({ direction = "down" }))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainMod .. " + SHIFT + K",  hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainMod .. " + SHIFT + J",  hl.dsp.window.move({ direction = "down" }))
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
@@ -418,7 +425,7 @@ hl.window_rule({
     name = "firefox-background",
     match = {
         class = "^firefox$",
-    },
+    },       
     workspace = "2 silent",
 })
 
@@ -442,3 +449,19 @@ hl.window_rule({
     },
     opacity = "0.82 override 0.82 override",
 })
+
+
+
+-- Tide Island shortcuts: begin (managed by Tide Island Config App).
+-- Empty shortcuts are disabled and intentionally omitted.
+hl.bind("SUPER + TAB", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call overview toggle"))
+hl.bind("SUPER + right", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide swipeRight"))
+hl.bind("SUPER + left", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide swipeLeft"))
+hl.bind("SUPER + down", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide showClock"))
+hl.bind("SUPER + M", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide togglePlayer"))
+hl.bind("SUPER + C", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleControlCenter"))
+hl.bind("SUPER + N", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleNotificationCenter"))
+hl.bind("SUPER + W", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleWallpaperPicker"))
+hl.bind("SUPER + slash", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleApplicationLauncher"))
+hl.bind("SUPER + T", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call island toggle"))
+-- Tide Island shortcuts: end.
