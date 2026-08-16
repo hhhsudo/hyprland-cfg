@@ -53,20 +53,21 @@ local menu        = "hyprlauncher"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
+
      hl.on("hyprland.start", function ()      
 --   hl.exec_cmd("nm-applet")
      hl.exec_cmd("quickshell -c pill &")
+     hl.exec_cmd("matugen &")
      hl.exec_cmd("hyprpaper &")
      hl.exec_cmd("kitty --class cava -e cava &")
      hl.dispatch(hl.dsp.layout("preselect d"))     
      hl.exec_cmd("spotify") 	
      hl.exec_cmd("sleep 0.5 && kitty")
      hl.exec_cmd("vesktop &")
-     hl.exec_cmd("firefox &")
-     hl.exec_cmd("matugen &")
+     hl.exec_cmd("steam")
      hl.exec_cmd("flatpak run org.telegram.desktop")
+     hl.exec_cmd("sleep 0.6 && kitty --class lavat -e lavat -s 7")
 end)
-
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
@@ -102,50 +103,39 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -----------------------
 
 -- Refer to https://wiki.hypr.land/Configuring/Basics/Variables/
+
 hl.config({
     general = {
         gaps_in  = 5,
         gaps_out = 20,
-
         border_size = 3,
-
         col = {
             active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
             inactive_border = "rgba(595959aa)",
         },
-
-        -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
         resize_on_border = false,
-
-        -- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
         allow_tearing = false,
-
         layout = "dwindle",
     },
-
     decoration = {
         rounding       = 20,
         rounding_power = 3,
-
-        -- Change transparency of focused and unfocused windows
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
-
         shadow = {
             enabled      = true,
             range        = 4,
             render_power = 3,
             color        = 0xee1a1a1a,
         },
-
-        blur = {
-            enabled   = true,
-            size      = 4,
-            passes    = 1,
-            vibrancy  = 0.1696,
         },
-    },
-
+-- blur = {
+-- enabled  = true,
+-- size     = 5,
+-- passes   = 1,
+-- vibrancy = 0.1696,
+-- },
+-- },
     animations = {
         enabled = true,
     },
@@ -226,9 +216,8 @@ hl.config({
     misc = {
         force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
-    },
+         },
 })
-
 
 ---------------
 ---- INPUT ----
@@ -285,7 +274,7 @@ hl.bind(mainMod .. " + B", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 --hl.bind(mainMod .. " + 0", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + P", hl.dsp.layout("togglesplit"))    -- dwindle only
-hl.bind("SHIFT + Space", hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 
 -- Move focus with mainMod + arrow keys
@@ -306,8 +295,8 @@ for i = 1, 10 do
 end
 
 -- Example special workspace (scratchpad)
---hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
+hl.bind(mainMod .. " + D", hl.dsp.window.move({ workspace = "special:magic" }))
 hl.bind("SUPER + F", function()
     hl.dispatch(hl.dsp.window.fullscreen({
         mode = "fullscreen",
@@ -363,6 +352,12 @@ local suppressMaximizeRule = hl.window_rule({
 })
 -- suppressMaximizeRule:set_enabled(false)
 
+hl.workspace_rule({
+    workspace = "3",
+    monitor = "HDMI-A-1",
+    default = true,
+})
+
 hl.window_rule({
     -- Fix some dragging issues with XWayland
     name  = "fix-xwayland-drags",
@@ -387,29 +382,13 @@ hl.window_rule({
 -- overlayLayerRule:set_enabled(false)
 
 -- Hyprland-run windowrule
+
 hl.window_rule({
     name  = "move-hyprland-run",
     match = { class = "hyprland-run" },
 
     move  = "20 monitor_h-120",
     float = true,
-})
-
-hl.window_rule({
-    name = "spotify-workspace",
-    match = {
-        class = "^spotify$",
-    },
-
-    workspace = "1",
-})
-
-hl.window_rule({
-    name = "vesktop-on-second-monitor",
-    match = {
-        class = "^vesktop$",
-    },
-    workspace = "4 silent",
 })
 
 hl.window_rule({
@@ -422,46 +401,82 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name = "firefox-background",
-    match = {
-        class = "^firefox$",
-    },       
-    workspace = "2 silent",
+  name = "telegram-to-magic",
+  match = { class = "^(org.telegram.desktop)$" },
+  workspace = "special:magic silent",
 })
 
 hl.window_rule({
-    name = "telegram-background",
-    match = {
-        class = "^org.telegram.desktop$",
-    },
-    workspace = "3 silent",
-})
-
-hl.workspace_rule({
-    workspace = "4",
-    monitor = "HDMI-A-1",
-    default = true,
+  name = "vesktop-to-magic",
+  match = { class = "^(vesktop)$" },
+  workspace = "special:magic silent",
 })
 
 hl.window_rule({
-    match = {
-        class = "Spotify",
-    },
-    opacity = "0.82 override 0.82 override",
+  name = "steam-to-magic",
+  match = { class = "^(steam)$" },
+  workspace = "special:magic silent",
 })
 
+hl.window_rule({
+    name = "lavat-workspace",
+    match = {
+        class = "^lavat$",
+    },
+    workspace = "3",
+    float = false,
+})
 
+hl.window_rule({ 
+    name = "spotify-workspace", 
+    match = { 
+         class = "^Spotify$", 
+    }, 
+    workspace = "1", 
+})	  
 
--- Tide Island shortcuts: begin (managed by Tide Island Config App).
--- Empty shortcuts are disabled and intentionally omitted.
-hl.bind("SUPER + TAB", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call overview toggle"))
-hl.bind("SUPER + right", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide swipeRight"))
-hl.bind("SUPER + left", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide swipeLeft"))
-hl.bind("SUPER + down", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide showClock"))
-hl.bind("SUPER + M", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide togglePlayer"))
-hl.bind("SUPER + C", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleControlCenter"))
-hl.bind("SUPER + N", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleNotificationCenter"))
-hl.bind("SUPER + W", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleWallpaperPicker"))
-hl.bind("SUPER + slash", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleApplicationLauncher"))
-hl.bind("SUPER + T", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call island toggle"))
--- Tide Island shortcuts: end.
+-- Hyprglass
+
+if hl.plugin.hyprglass then
+    local hg = hl.plugin.hyprglass
+
+    hg.config({
+        enabled        = true,
+        default_theme  = "light",
+        default_preset = "default",
+        layers         = { enabled = false },
+    })
+
+    hg.preset("normal", {
+        glass_opacity   = 0.85,
+        blur_strength   = 3.0,
+        blur_iterations = 3,
+    })
+end
+
+-- 2. Kitty: активное окно 0.9, неактивное 0.7
+hl.window_rule({
+    match   = { class = "^(kitty)$" },
+    opacity = "0.65 override 0.5 override",
+    tag     = "+hyprglass_enabled",
+})
+
+-- 3. Spotify: активное 0.95, неактивное 0.8
+hl.window_rule({
+    match   = { class = "^(Spotify|spotify)$" },
+    opacity = "0.65 override 0.5 override",
+    tag     = "+hyprglass_enabled",
+})
+
+hl.window_rule({ 
+match = { class = "^(cava)$" }, 
+opacity = "0.65 override 0.5 override", 
+tag = "+hyprglass_enabled", 
+})
+
+hl.window_rule({ 
+match = { class = "^(lavat)$" }, 
+opacity = "0.65 override 0.5 override", 
+tag = "+hyprglass_enabled", 
+})
+
