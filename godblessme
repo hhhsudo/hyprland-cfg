@@ -55,6 +55,7 @@ local menu        = "hyprlauncher"
 --
 
      hl.on("hyprland.start", function ()      
+     hl.exec_cmd("hyprpm reload -n")
 --   hl.exec_cmd("nm-applet")
      hl.exec_cmd("quickshell -c pill &")
      hl.exec_cmd("matugen &")
@@ -67,6 +68,7 @@ local menu        = "hyprlauncher"
      hl.exec_cmd("steam")
      hl.exec_cmd("flatpak run org.telegram.desktop")
      hl.exec_cmd("sleep 0.6 && kitty --class lavat -e lavat -s 7")
+     hl.exec_cmd("vicinae server &")
 end)
 
 -------------------------------
@@ -110,9 +112,9 @@ hl.config({
         gaps_out = 20,
         border_size = 3,
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
-        },
+        active_border   = { colors = {"rgba(ffffffff)", "rgba(ffffffff)"}, angle = 45 },
+        inactive_border = "rgba(595959aa)",
+    },
         resize_on_border = false,
         allow_tearing = false,
         layout = "dwindle",
@@ -353,7 +355,7 @@ local suppressMaximizeRule = hl.window_rule({
 -- suppressMaximizeRule:set_enabled(false)
 
 hl.workspace_rule({
-    workspace = "3",
+    workspace = "5",
     monitor = "HDMI-A-1",
     default = true,
 })
@@ -423,7 +425,7 @@ hl.window_rule({
     match = {
         class = "^lavat$",
     },
-    workspace = "3",
+    workspace = "5",
     float = false,
 })
 
@@ -435,48 +437,52 @@ hl.window_rule({
     workspace = "1", 
 })	  
 
--- Hyprglass
-
-if hl.plugin.hyprglass then
+-- cfg Hyprglass
+if hl and hl.plugin and hl.plugin.hyprglass then
     local hg = hl.plugin.hyprglass
 
     hg.config({
-        enabled        = true,
-        default_theme  = "light",
-        default_preset = "default",
+        default_theme  = "dark",
+        default_preset = "glass",
         layers         = { enabled = false },
     })
 
-    hg.preset("normal", {
-        glass_opacity   = 0.85,
-        blur_strength   = 3.0,
-        blur_iterations = 3,
+    hg.preset("glass", {
+        glass_opacity        = 1.3,
+        blur_strength        = 0.7,
+        blur_iterations      = 3,
+        refraction_strength  = 0.3,
+        chromatic_aberration = 1.0,
+        edge_thickness       = 0.1,
+        lens_distortion      = 0.9,
+        brightness           = 1.1,
+        contrast             = 1.4,
     })
+   
+    hg.layer("hyprshell_switch", { exclude = true })
 end
 
--- 2. Kitty: активное окно 0.9, неактивное 0.7
+-- Hyprglass window rules
 hl.window_rule({
     match   = { class = "^(kitty)$" },
     opacity = "0.65 override 0.5 override",
     tag     = "+hyprglass_enabled",
 })
 
--- 3. Spotify: активное 0.95, неактивное 0.8
 hl.window_rule({
     match   = { class = "^(Spotify|spotify)$" },
+    opacity = "0.65 override 0.65 override",
+    tag     = "+hyprglass_enabled",
+})
+
+hl.window_rule({
+    match   = { class = "^(cava)$" },
     opacity = "0.65 override 0.5 override",
     tag     = "+hyprglass_enabled",
 })
 
-hl.window_rule({ 
-match = { class = "^(cava)$" }, 
-opacity = "0.65 override 0.5 override", 
-tag = "+hyprglass_enabled", 
+hl.window_rule({
+    match   = { class = "^(lavat)$" },
+    opacity = "0.65 override 0.5 override",
+    tag     = "+hyprglass_enabled",
 })
-
-hl.window_rule({ 
-match = { class = "^(lavat)$" }, 
-opacity = "0.65 override 0.5 override", 
-tag = "+hyprglass_enabled", 
-})
-
