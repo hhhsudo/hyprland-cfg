@@ -26,12 +26,12 @@ hl.monitor({
 position = "1920x-310",
     scale    = "1",
 })
-hl.monitor({
-    output   = "HDMI-A-1",
-    mode     = "1920x1080@60",
-    position = "0x0",
-    scale    = "1",
-})
+--hl.monitor({
+--    output   = "HDMI-A-1",
+--    mode     = "1920x1080@60",
+--    position = "0x0",
+--    scale    = "1",
+--})
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 ---------------------
@@ -65,7 +65,7 @@ local menu        = "hyprlauncher"
      hl.exec_cmd("spotify") 	
      hl.exec_cmd("sleep 0.5 && kitty")
      hl.exec_cmd("vesktop", { workspace = "special:magic silent" }) 
-     hl.exec_cmd("sleep 0.6 && kitty --class lavat -e lavat -s 7")
+--   hl.exec_cmd("sleep 0.6 && kitty --class lavat -e lavat -s 7")
      hl.exec_cmd("vicinae server &")
      hl.exec_cmd("steam -silent") 
      hl.exec_cmd("flatpak run org.telegram.desktop -autostart")
@@ -361,11 +361,11 @@ local suppressMaximizeRule = hl.window_rule({
 })
 -- suppressMaximizeRule:set_enabled(false)
 
-hl.workspace_rule({
-    workspace = "5",
-    monitor = "HDMI-A-1",
-    default = true,
-})
+--hl.workspace_rule({
+--    workspace = "5",
+--    monitor = "HDMI-A-1",
+--    default = true,
+--})
 
 hl.window_rule({
     -- Fix some dragging issues with XWayland
@@ -487,7 +487,6 @@ hl.window_rule({
     opacity = "1.0 override 0.55 override",
     tag     = "+hyprglass_enabled",
 })
-
 
 
 
